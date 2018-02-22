@@ -1,0 +1,27 @@
+{
+  "name": "huawei-e355-sms-api",
+  "version": "1.0.0",
+  "description": "SMS API for Huawei e355 Modem",
+  "main": "sms.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishavanand/huawei-e355-sms-api.git"
+  },
+  "keywords": [
+    "huawei",
+    "e355"
+  ],
+  "author": "Rishav Anand",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rishavanand/huawei-e355-sms-api/issues"
+  },
+  "homepage": "https://github.com/rishavanand/huawei-e355-sms-api#readme",
+  "dependencies": {
+    "request": "^2.83.0",
+    "xml2js": "^0.4.19"
+  }
+}
