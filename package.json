@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/rishavanand/huawei-e355-sms-api#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
     "request": "^2.83.0",
     "xml2js": "^0.4.19"
   }

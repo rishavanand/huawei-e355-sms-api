@@ -94,20 +94,6 @@ function loginAsAdmin(){
 	})
 }
 
-function checkLogin(){
-	var url = '/api/user/state-login';
-	return makeGetRequest(url)
-	.then(function(data){
-		return parseXML(data);
-	})
-	.then(function(data){
-		return checkLoginStatus(data);
-	})
-	.catch(function(){
-		return loginAsAdmin();
-	})
-}
-
 function checkLoginStatus(res){
 	return new Promise(function(resolve, reject){
 		if(res.response.State == -1)
@@ -117,7 +103,91 @@ function checkLoginStatus(res){
 	});
 }
 
-checkLogin()
-.then(function(data){
-	console.log(data);
-})
+function deleteSMS(id){
+	return new Promise(function(resolve, reject){
+
+		var body = '<?xml version=\"1.0\" encoding=\"UTF-8\"?><request><Index>' + id + '</Index></request>';
+		var url = '/api/sms/delete-sms';
+
+		makePostRequest(body, url)
+
+		.then(function(data){
+			return parseXML(data);
+		})
+
+		.then(function(data){
+			if(data.response && data.response == 'OK'){
+				return resolve('Deleted');
+			}else{
+				return reject('Message could not be deleted');
+			}
+		})
+
+		.catch(function(err){
+			return reject('Message could not be deleted ' + err);
+		})
+
+	});
+}
+
+exports.checkLogin = function(){
+
+	var url = '/api/user/state-login';
+
+	return makeGetRequest(url)
+
+	.then(function(data){
+		return parseXML(data);
+	})
+
+	.then(function(data){
+		return checkLoginStatus(data);
+	})
+
+	.catch(function(){
+		return loginAsAdmin();
+	})
+}
+
+exports.readSMS = function(pageNo){
+
+	return new Promise(function(resolve, reject){
+
+		var body = '<?xml version="1.0" encoding="UTF-8"?><request><PageIndex>' + pageNo +'</PageIndex><ReadCount>50</ReadCount><BoxType>1</BoxType><SortType>0</SortType><Ascending>0</Ascending><UnreadPreferred>0</UnreadPreferred></request>';
+		var url = '/api/sms/sms-list';
+		
+		makePostRequest(body, url)
+
+		.then(function(data){
+			return parseXML(data);
+		})
+
+		.then(function(data){
+			if(data.response.Count != 0){
+				return resolve(data);
+			}else{
+				return reject('No sms on this page');
+			}
+		})
+
+	});
+
+}
+
+exports.checkAvailability = function(){
+
+	return new Promise(function(resolve, reject){
+
+		makeGetRequest('http://'+ config.MODEM_IP +'/html/home.html')
+
+		.then(function(){
+			return resolve('Modem Available');
+		})
+
+		.catch(function(){
+			return reject('Could not connect to modem\'s IP address');
+		})
+
+	});
+
+}
