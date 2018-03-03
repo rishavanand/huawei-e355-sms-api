@@ -29,6 +29,32 @@ app.get('/getsms/:pageNo',function(req,res){
 	})
 });
 
+app.post('/sendsms',function(req,res){
+	sms.checkAvailability()
+	.then(function(){
+		return sms.checkLogin();
+	})
+	.then(function(){
+		return sms.sendSMS(req.body.mob, req.body.message);
+	})
+	.then(function(resp){
+		if(resp.response == 'OK'){
+			res.json({
+				success: true
+			});
+		}else{
+			res.json({
+				success: false
+			});
+		}
+	})
+	.catch(function(err){
+		res.json({
+			success: false
+		});
+	})
+});
+
 app.listen(3000, function(){
 	console.log('Server started on port 3000');
 });

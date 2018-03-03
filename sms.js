@@ -156,6 +156,34 @@ exports.readSMS = function(pageNo){
 	});
 }
 
+exports.sendSMS = function (number, message){
+	return new Promise(function(resolve, reject){
+		var currentdate = new Date(); 
+		var datetime = currentdate.getFullYear() + "-"
+                + (currentdate.getMonth()+1)  + "-" 
+                + currentdate.getDate() + " "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+
+        var body = '<?xml version="1.0" encoding="UTF-8"?><request><Index>-1</Index><Phones><Phone>'+number+'</Phone></Phones><Sca></Sca><Content>'+message+'</Content><Length>'+message.length+'</Length><Reserved>1</Reserved><Date>'+datetime+'</Date></request>';
+		var url = '/api/sms/send-sms';
+		makePostRequest(body, url)
+		.then(function(res){
+			return parseXML(res);
+		})
+		.then(function(res){
+			return resolve(res);
+		})
+		.catch(function(err){
+			console.log(err);
+			return reject(err);
+		})
+	});
+}
+
+/*sendSMS("+918292600148", "HELLO WORLD");*/
+
 exports.checkAvailability = function(){
 	return new Promise(function(resolve, reject){
 		makeGetRequest('http://'+ config.MODEM_IP +'/html/home.html')
